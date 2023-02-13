@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+
+  tienda:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: container_tienda  
+    ports:
+      - "3010:3010"    
+    depends_on:
+      - dbpostgrestienda
+    links:
+      - dbpostgrestienda
+    volumes:
+      - .:/home/app
+    networks:
+      app_network_tienda:
+        aliases:
+          - app_host_tienda
+
+  dbpostgrestienda:    
+    container_name: container_dbtienda
+    image: postgres:15.1-alpine   
+    restart: always
+    environment:     
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+   
+    ports: 
+      - "5440:5432"    
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      app_network_tienda:
+        aliases:
+          - data_host_tienda
+volumes:
+
+  pgdata:
+networks:
+  app_network_tienda:
+    name: tiendaDb
+    driver: bridge
+    ipam:
+      driver: default
+
+
+
+
+  
+    
