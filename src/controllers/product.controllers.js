@@ -2,7 +2,9 @@ const Product = require('../models/product.model');
 const catchAsync = require('../utils/catchAsync');
 
 //==================================find All Products================================================
-exports.findAllProducts = catchAsync(async (req, res) => {
+//A cada funcion se le debe pasar el argumento next, asi no lo utilice ya que lo exige
+//la funcion catchAsync
+exports.findAllProducts = catchAsync(async (req, res,next) => {
     const products = await Product.findAll({
       where: {
         status: true,
@@ -17,13 +19,12 @@ exports.findAllProducts = catchAsync(async (req, res) => {
   });
 
 //=================================Find Product By Id======================================
-exports.findByIdProduct = catchAsync(async(req, res) => {
+exports.findByIdProduct = catchAsync(async(req, res,next) => {
   const { id } = req.params;
   //const {product}=req
 const product = await Product.findOne({
     where:{
-        id,
-        status: true,
+        id
     }
 })
 
@@ -37,7 +38,7 @@ return res.status(200).json({
 
 //================================Create Product===========================================
 //Crear un producto
-exports.createProduct = catchAsync(async (req, res) => {
+exports.createProduct = catchAsync(async (req, res,next) => {
   //Obtenemos los datos ingresado por el usuario
   const { title, description, quantity, price, categoryId, userId } = req.body;
   //Creamos el producto con Product.create y le pasamos los datos a crear
@@ -59,8 +60,9 @@ exports.createProduct = catchAsync(async (req, res) => {
 });
 
 //===============================update By Id product========================================
-exports.updateByIdProduct = catchAsync(async (req, res) => {
+exports.updateByIdProduct = catchAsync(async (req, res,next) => {
   //Como ya obtuve el producto con el middleware, y tenemos un respuesta ahora lo desestructuro para hacer el update del mismo
+  //req.product: en el siguiente codigo coloco el mismo nombre que coloque req.product
   const { product } = req;
   const { title, description, quantity, price } = req.body;
 
@@ -78,7 +80,7 @@ exports.updateByIdProduct = catchAsync(async (req, res) => {
 });
 
 //==================================Delete Product===========================================
-exports.deleteProduct = catchAsync(async(req, res) => {
+exports.deleteProduct = catchAsync(async(req, res,next) => {
   //  console.log(req.params) Capturamos el parametro que pasamos const { id } = req.params;
 const {product}=req
 await product.update({status:false})

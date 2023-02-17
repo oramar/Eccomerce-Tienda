@@ -1,7 +1,7 @@
 const Category = require('../models/categories.models');
 const catchAsync = require('../utils/catchAsync');
 
-//============================Find all user=================================================
+//============================Find all Categories=================================================
 exports.findAllCategories = catchAsync(async (req, res,next) => {
   const categories = await Category.findAll({
     where: {
@@ -14,7 +14,7 @@ exports.findAllCategories = catchAsync(async (req, res,next) => {
     categories,
   });
 });
-//============================Find User By Id===============================================
+//============================Find Category By Id===============================================
 exports.findByIdCategory = catchAsync(async (req, res,next) => {
     const {category} = req;
    
@@ -24,7 +24,7 @@ exports.findByIdCategory = catchAsync(async (req, res,next) => {
         category,
       });
 })
-//==============================Create user=================================================
+//==============================Create Category=================================================
 exports.createCategory = catchAsync(async (req, res,next) => {
   const { username } = req.body;
   const category = await Category.create({ username });
@@ -35,7 +35,7 @@ exports.createCategory = catchAsync(async (req, res,next) => {
     category,
   });
 });
-//============================Update User By Id=============================================
+//============================Update Category By Id=============================================
 exports.updateByIdCategory = catchAsync(async(req,res,next)=>{
     const {username} = req.body 
     const { category } = req;
@@ -45,7 +45,7 @@ exports.updateByIdCategory = catchAsync(async(req,res,next)=>{
         message: 'Category updated successfully',
       });
 })
-//=============================Delete user by Id============================================
+//=============================Delete Category by Id============================================
 exports.deleteByIdCategory = catchAsync(async(req,res,next)=>{
     const {category} = req;
     await category.update({status:false})

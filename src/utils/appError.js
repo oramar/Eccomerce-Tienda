@@ -1,4 +1,6 @@
+//Captura errores Operacionals 400..
 class AppError extends Error {
+  //Le pasamos al constructor el mensaje de error y codigo error
   constructor(message, statusCode) {
     super(message);
 

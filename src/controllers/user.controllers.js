@@ -2,7 +2,7 @@ const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
 
 //============================Find all user=================================================
-exports.findAllUser = catchAsync(async (req, res) => {
+exports.findAllUser = catchAsync(async (req, res,next) => {
   const users = await User.findAll({
     where: {
       status: true,
@@ -16,7 +16,7 @@ exports.findAllUser = catchAsync(async (req, res) => {
   });
 });
 //============================Find User By Id===============================================
-exports.findByIdUser = catchAsync(async (req, res) => {
+exports.findByIdUser = catchAsync(async (req, res,next) => {
     const { user } = req;
 
     res.status(200).json({
@@ -25,10 +25,8 @@ exports.findByIdUser = catchAsync(async (req, res) => {
       user,
     });
 });
-//==============================Create user=================================================
-exports.createUser = catchAsync(async (req, res) => {});
 //============================Update User By Id=============================================
-exports.updateUser = catchAsync(async (req, res) => {
+exports.updateUser = catchAsync(async (req, res,next) => {
     const { username, email } = req.body;
     const { user } = req;
   
@@ -40,7 +38,7 @@ exports.updateUser = catchAsync(async (req, res) => {
     });
 });
 //=============================Delete user by Id============================================
-exports.deleteUser = catchAsync(async (req, res) => {
+exports.deleteUser = catchAsync(async (req, res,next) => {
     const { user } = req;
 
     await user.update({ status: false });

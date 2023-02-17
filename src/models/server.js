@@ -2,9 +2,12 @@ const express = require('express');
 const { routerProduct } = require('../routers/product.routes');
 const cors = require('cors');
 const { db } = require('../databases/db');
-const { routerUser } = require('../routers/user.routers');
+const { routerUser } = require('../routers/user.routes');
 const morgan = require('morgan');
-const { routerCategories } = require('../routers/categories.routers');
+const { routerCategories } = require('../routers/categories.routes');
+const AppError = require('../utils/appError');
+const globalErrorHandler = require('../controllers/error.controller');
+const { routerAuth } = require('../routers/auth.routes');
 class Server {
   constructor() {
     this.app = express();
@@ -12,7 +15,8 @@ class Server {
     this.paths = {
       users: '/api.v1/users',
       products: '/api/v1/products',
-      categories: '/api/v1/categories'
+      categories: '/api/v1/categories',
+      auth: '/api/v1/auth',
     };
     this.database();
     this.middlewares();
@@ -35,6 +39,14 @@ class Server {
     this.app.use(this.paths.users, routerUser)
     //Utilizamos las rutas de categorias
     this.app.use(this.paths.categories, routerCategories)
+    //utilizar las rutas de autenticacion
+    this.app.use(this.paths.auth, routerAuth);
+    this.app.all('*',(req,res,next)=>{
+      return next(
+        new AppError(`Can't find ${req.originalUrl} on this server!`, 404)
+      );
+    })
+    this.app.use(globalErrorHandler);
   }
 
   database(){

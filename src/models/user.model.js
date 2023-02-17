@@ -27,7 +27,7 @@ const User = db.define('user', {
     defaultValue: 'user',
   },
   passwordChangedAt: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: true,
   },
   status: {

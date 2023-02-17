@@ -14,7 +14,8 @@ exports.validProductById = catchAsync(async (req, res, next) => {
   if (!product) {
     return next(new AppError('Product not found', 404));
   }
-
+//Le  adjunto una llave el producto que encontre
+//req.product: product se puede llamar como quiera
   req.product = product;
   next();
 });

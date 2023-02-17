@@ -38,7 +38,7 @@ exports.validIfExistUserEmail = catchAsync(async (req, res, next) => {
       )
     );
   }
-
+//Enviamos un error si el usuario ya existe
   if (user) {
     return next(new AppError('The email user already exists', 400));
   }
