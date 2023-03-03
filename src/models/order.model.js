@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { db } = require('../database/db');
+const { db } = require('../databases/db');
 
 const Order = db.define('order', {
   id: {

@@ -3,9 +3,11 @@ const AppError = require('../utils/appError');
 const handleCastError22P02 = () =>
   new AppError('Some type of data send does not match was expected', 400);
 
+  //Enviamos un error de que el token es invalido
 const handleJWTError = () =>
   new AppError('Invalid Token. Please login again!', 401);
 
+  //Enviamos un error de que el token a experado
 const handleJWTExpiredError = () =>
   new AppError('Your token has expired! Please login again.', 401);
 
@@ -45,14 +47,18 @@ const globalErrorHandler = (err, req, res, next) => {
   }
 
   if (process.env.NODE_ENV === 'production') {
+    //Aqui obtengo el codigo error, es status y si es operacional
     let error = { ...err };
 
+    //Si no existe el codigo de error, a la variable le pasamo err, para muestre mensaje
     if (!error.parent?.code) {
       error = err;
     }
 
     if (error.parent?.code === '22P02') error = handleCastError22P02(error);
+    //Si nos da el error "JsonWebTokenError" significa que token fue camiado
     if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
+    //Validamos si el token expira
     if (error.name === 'TokenExpiredError')
       error = handleJWTExpiredError(error);
 

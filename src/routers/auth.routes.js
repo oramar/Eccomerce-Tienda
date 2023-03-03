@@ -1,32 +1,41 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const { check } = require('express-validator');
-const { createUser, login } = require("../controllers/auth.controller");
-const { validIfExistUserEmail } = require('../middlewares/user.middleware');
+const {
+  createUser,
+  login,
+  renewToken,
+} = require('../controllers/auth.controller');
+const { protect } = require('../middlewares/auth.middlewares');
 const { validateFields } = require('../middlewares/validateField.middleware');
-const router = Router()
+const { validIfExistUserEmail } = require('../middlewares/user.middleware');
+const { upload } = require('../utils/multer');
+const { registerUserValidation, loginUserValidation } = require('../middlewares/validations.middleware');
+const router = Router();
 router.post(
-    '/signup',
-    [
-      check('username', 'The username must be mandatory').not().isEmpty(),
-      check('email', 'The email must be mandatory').not().isEmpty(),
-      check('email', 'The email must be a correct format').isEmail(),
-      check('password', 'The password must be mandatory').not().isEmpty(),
-      validateFields,
-      validIfExistUserEmail,
-    ],
-    createUser
-  );
+  '/signup',
+  [
+    //2. segundo paso de multer. pasamos al controller de auth
+    upload.single('profileImageUrl'),//para indicarle que voy a almacer una imagen
+    registerUserValidation,
+    validateFields,
+    validIfExistUserEmail,
 
-  router.post(
-    '/login',
-    [
-      check('email', 'The email must be mandatory').not().isEmpty(),
-      check('email', 'The email must be a correct format').isEmail(),
-      check('password', 'The password must be mandatory').not().isEmpty(),
-      validateFields,
-    ],
-    login
-  );
-module.exports ={
-    routerAuth: router
-}
+  ],
+  createUser
+);
+
+router.post(
+  '/login',
+  [
+    loginUserValidation,
+    validateFields,
+  ],
+  login
+);
+//Verificamos el token
+router.use(protect);
+//Renovamos el token
+router.get('/renew', renewToken);
+module.exports = {
+  routerAuth: router,
+};
